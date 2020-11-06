@@ -16,16 +16,10 @@ int main(int argc, char *argv[]) {
     path p(argc>1? argv[1] : ".");
     vector<string> all_files = get_all_files_in_path(p);
     vector<Vocab> all_vocab = read_all_vocab_of_files(all_files); 
-    
-    std::srand (time(NULL));
+    vector<vector<Vocab>> batches = batch_vocab(all_vocab, 5);
     while (true) {
-        int q = rand() % all_vocab.size();
-        Vocab v = all_vocab[q];
-        cout << v.deutsch << " > ";
-        std::string eingabe = read_sentence();
-        if (std::strcmp(eingabe.c_str(), v.spanisch.c_str()) == 0)
-            std::cout<<"Richtig\n";
-        else
-            std::cout<<"Falsch.. "<<v.spanisch<<"\n";
-    } 
+        for (int i = 0; i < batches.size(); i++) {
+            train_batch(batches[i]); 
+        }
+    }
 }
